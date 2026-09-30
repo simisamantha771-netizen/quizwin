@@ -1,192 +1,387 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuizWin - Quiz & Rewards</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<title>QuizWin - Quiz & Rewards</title>
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f7fb;
-            color: #222;
-        }
+<style>
+* {
+    box-sizing: border-box;
+}
 
-        header {
-            background: #2563eb;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f7fb;
+    color: #222;
+}
 
-        .container {
-            max-width: 700px;
-            margin: 30px auto;
-            padding: 15px;
-        }
+.header {
+    background: #6c5ce7;
+    color: white;
+    padding: 25px 15px;
+    text-align: center;
+}
 
-        .card {
-            background: white;
-            padding: 25px;
-            margin-bottom: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-        }
+.header h1 {
+    margin: 0;
+    font-size: 32px;
+}
 
-        h1, h2 {
-            margin-top: 0;
-        }
+.header p {
+    margin: 8px 0 0;
+}
 
-        button {
-            width: 100%;
-            padding: 14px;
-            margin-top: 10px;
-            border: 0;
-            border-radius: 10px;
-            background: #2563eb;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-        }
+.container {
+    max-width: 600px;
+    margin: 25px auto;
+    padding: 15px;
+}
 
-        button:hover {
-            background: #1d4ed8;
-        }
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+}
 
-        .points {
-            font-size: 25px;
-            font-weight: bold;
-            color: #2563eb;
-        }
+.question {
+    font-size: 21px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
 
-        .option {
-            background: #eef2ff;
-            color: #222;
-        }
+.option {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0;
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    background: white;
+    font-size: 16px;
+    text-align: left;
+    cursor: pointer;
+}
 
-        footer {
-            text-align: center;
-            padding: 20px;
-            color: #666;
-        }
-    </style>
+.option:hover {
+    background: #f0edff;
+    border-color: #6c5ce7;
+}
+
+.correct {
+    background: #d4edda !important;
+    border-color: #28a745 !important;
+}
+
+.wrong {
+    background: #f8d7da !important;
+    border-color: #dc3545 !important;
+}
+
+button {
+    font-family: Arial, sans-serif;
+}
+
+.next-btn,
+.start-btn {
+    width: 100%;
+    padding: 15px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 12px;
+    background: #6c5ce7;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.next-btn:hover,
+.start-btn:hover {
+    background: #5848c2;
+}
+
+#result {
+    text-align: center;
+}
+
+.score {
+    font-size: 30px;
+    font-weight: bold;
+    color: #6c5ce7;
+    margin: 20px 0;
+}
+
+.progress {
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.hidden {
+    display: none;
+}
+
+.footer {
+    text-align: center;
+    color: #777;
+    padding: 25px;
+    font-size: 14px;
+}
+</style>
 </head>
 
 <body>
 
-<header>
-    <h1>QuizWin</h1>
-    <p>Play Quiz • Earn Points • Climb the Leaderboard</p>
-</header>
+<div class="header">
+    <h1>🎯 QuizWin</h1>
+    <p>Test Your Knowledge & Have Fun!</p>
+</div>
 
 <div class="container">
 
-    <div class="card">
-        <h2>Welcome to QuizWin</h2>
-        <p>Test your knowledge and collect points.</p>
+    <div class="card" id="quizBox">
 
-        <p>Your Points:</p>
-        <div class="points" id="points">0</div>
+        <div class="progress" id="progress">
+            Question 1
+        </div>
 
-        <button onclick="startQuiz()">Start Daily Quiz</button>
+        <div class="question" id="question">
+            Loading question...
+        </div>
+
+        <div id="options"></div>
+
+        <button class="next-btn hidden" id="nextBtn" onclick="nextQuestion()">
+            Next Question ➡️
+        </button>
+
     </div>
 
-    <div class="card" id="quizBox" style="display:none;">
-        <h2 id="question">Question</h2>
+    <div class="card hidden" id="result">
 
-        <button class="option" onclick="answer(0)" id="option0"></button>
-        <button class="option" onclick="answer(1)" id="option1"></button>
-        <button class="option" onclick="answer(2)" id="option2"></button>
-        <button class="option" onclick="answer(3)" id="option3"></button>
+        <h2>🎉 Quiz Completed!</h2>
 
-        <p id="result"></p>
+        <div class="score" id="score"></div>
+
+        <p id="message"></p>
+
+        <button class="start-btn" onclick="restartQuiz()">
+            🔄 Play Again
+        </button>
+
     </div>
 
 </div>
 
-<footer>
-    © 2026 QuizWin. All rights reserved.
-</footer>
+<div class="footer">
+    © 2026 QuizWin. All Rights Reserved.
+</div>
 
 <script>
 
 const questions = [
+
     {
         question: "What is the capital of Bangladesh?",
-        options: ["Dhaka", "Chittagong", "Sylhet", "Rajshahi"],
-        answer: 0
+        options: [
+            "Chittagong",
+            "Dhaka",
+            "Sylhet",
+            "Rajshahi"
+        ],
+        answer: "Dhaka"
     },
-    {
-        question: "How many days are there in a week?",
-        options: ["5", "6", "7", "8"],
-        answer: 2
-    },
+
     {
         question: "Which planet is known as the Red Planet?",
-        options: ["Earth", "Mars", "Venus", "Jupiter"],
-        answer: 1
+        options: [
+            "Earth",
+            "Venus",
+            "Mars",
+            "Jupiter"
+        ],
+        answer: "Mars"
+    },
+
+    {
+        question: "How many days are there in a week?",
+        options: [
+            "5",
+            "6",
+            "7",
+            "8"
+        ],
+        answer: "7"
+    },
+
+    {
+        question: "Which ocean is the largest?",
+        options: [
+            "Atlantic Ocean",
+            "Indian Ocean",
+            "Pacific Ocean",
+            "Arctic Ocean"
+        ],
+        answer: "Pacific Ocean"
+    },
+
+    {
+        question: "Which language is mainly used to structure a web page?",
+        options: [
+            "HTML",
+            "Python",
+            "C++",
+            "SQL"
+        ],
+        answer: "HTML"
     }
+
 ];
 
 let currentQuestion = 0;
-let points = 0;
+let score = 0;
+let answered = false;
 
-function startQuiz() {
-    currentQuestion = 0;
-    document.getElementById("quizBox").style.display = "block";
-    showQuestion();
-}
+function loadQuestion() {
 
-function showQuestion() {
+    answered = false;
 
     const q = questions[currentQuestion];
+
+    document.getElementById("progress").innerText =
+        "Question " + (currentQuestion + 1) +
+        " of " + questions.length;
 
     document.getElementById("question").innerText =
         q.question;
 
-    for (let i = 0; i < 4; i++) {
-        document.getElementById("option" + i).innerText =
-            q.options[i];
-    }
+    const optionsBox = document.getElementById("options");
 
-    document.getElementById("result").innerText = "";
+    optionsBox.innerHTML = "";
+
+    document.getElementById("nextBtn")
+        .classList.add("hidden");
+
+    q.options.forEach(function(option) {
+
+        const button = document.createElement("button");
+
+        button.innerText = option;
+        button.className = "option";
+
+        button.onclick = function() {
+            checkAnswer(button, option);
+        };
+
+        optionsBox.appendChild(button);
+
+    });
 }
 
-function answer(selected) {
+function checkAnswer(button, selected) {
 
-    const q = questions[currentQuestion];
-
-    if (selected === q.answer) {
-        points += 10;
-        document.getElementById("result").innerText =
-            "Correct! +10 points";
-    } else {
-        document.getElementById("result").innerText =
-            "Wrong answer.";
+    if (answered) {
+        return;
     }
 
-    document.getElementById("points").innerText = points;
+    answered = true;
+
+    const correctAnswer =
+        questions[currentQuestion].answer;
+
+    const allOptions =
+        document.querySelectorAll(".option");
+
+    allOptions.forEach(function(btn) {
+
+        if (btn.innerText === correctAnswer) {
+            btn.classList.add("correct");
+        }
+
+    });
+
+    if (selected === correctAnswer) {
+
+        score++;
+
+        button.classList.add("correct");
+
+    } else {
+
+        button.classList.add("wrong");
+
+    }
+
+    document.getElementById("nextBtn")
+        .classList.remove("hidden");
+}
+
+function nextQuestion() {
 
     currentQuestion++;
 
     if (currentQuestion < questions.length) {
-        setTimeout(showQuestion, 800);
+
+        loadQuestion();
+
     } else {
-        setTimeout(function() {
-            document.getElementById("question").innerText =
-                "Quiz Completed!";
-            document.getElementById("result").innerText =
-                "Your score: " + points + " points";
-        }, 800);
+
+        showResult();
+
     }
 }
+
+function showResult() {
+
+    document.getElementById("quizBox")
+        .classList.add("hidden");
+
+    document.getElementById("result")
+        .classList.remove("hidden");
+
+    document.getElementById("score").innerText =
+        score + " / " + questions.length;
+
+    let message = "";
+
+    if (score === questions.length) {
+
+        message = "🏆 Excellent! You got every answer correct!";
+
+    } else if (score >= 3) {
+
+        message = "👏 Great job! Keep learning!";
+
+    } else {
+
+        message = "💪 Good try! Play again and improve your score!";
+
+    }
+
+    document.getElementById("message").innerText =
+        message;
+}
+
+function restartQuiz() {
+
+    currentQuestion = 0;
+    score = 0;
+
+    document.getElementById("result")
+        .classList.add("hidden");
+
+    document.getElementById("quizBox")
+        .classList.remove("hidden");
+
+    loadQuestion();
+}
+
+loadQuestion();
 
 </script>
 
 </body>
-  </html>
+</html>
