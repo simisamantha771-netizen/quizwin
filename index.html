@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizWin - Quiz & Rewards</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #222;
+        }
+
+        header {
+            background: #2563eb;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 30px auto;
+            padding: 15px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        h1, h2 {
+            margin-top: 0;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 10px;
+            border: 0;
+            border-radius: 10px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .points {
+            font-size: 25px;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .option {
+            background: #eef2ff;
+            color: #222;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>QuizWin</h1>
+    <p>Play Quiz • Earn Points • Climb the Leaderboard</p>
+</header>
+
+<div class="container">
+
+    <div class="card">
+        <h2>Welcome to QuizWin</h2>
+        <p>Test your knowledge and collect points.</p>
+
+        <p>Your Points:</p>
+        <div class="points" id="points">0</div>
+
+        <button onclick="startQuiz()">Start Daily Quiz</button>
+    </div>
+
+    <div class="card" id="quizBox" style="display:none;">
+        <h2 id="question">Question</h2>
+
+        <button class="option" onclick="answer(0)" id="option0"></button>
+        <button class="option" onclick="answer(1)" id="option1"></button>
+        <button class="option" onclick="answer(2)" id="option2"></button>
+        <button class="option" onclick="answer(3)" id="option3"></button>
+
+        <p id="result"></p>
+    </div>
+
+</div>
+
+<footer>
+    © 2026 QuizWin. All rights reserved.
+</footer>
+
+<script>
+
+const questions = [
+    {
+        question: "What is the capital of Bangladesh?",
+        options: ["Dhaka", "Chittagong", "Sylhet", "Rajshahi"],
+        answer: 0
+    },
+    {
+        question: "How many days are there in a week?",
+        options: ["5", "6", "7", "8"],
+        answer: 2
+    },
+    {
+        question: "Which planet is known as the Red Planet?",
+        options: ["Earth", "Mars", "Venus", "Jupiter"],
+        answer: 1
+    }
+];
+
+let currentQuestion = 0;
+let points = 0;
+
+function startQuiz() {
+    currentQuestion = 0;
+    document.getElementById("quizBox").style.display = "block";
+    showQuestion();
+}
+
+function showQuestion() {
+
+    const q = questions[currentQuestion];
+
+    document.getElementById("question").innerText =
+        q.question;
+
+    for (let i = 0; i < 4; i++) {
+        document.getElementById("option" + i).innerText =
+            q.options[i];
+    }
+
+    document.getElementById("result").innerText = "";
+}
+
+function answer(selected) {
+
+    const q = questions[currentQuestion];
+
+    if (selected === q.answer) {
+        points += 10;
+        document.getElementById("result").innerText =
+            "Correct! +10 points";
+    } else {
+        document.getElementById("result").innerText =
+            "Wrong answer.";
+    }
+
+    document.getElementById("points").innerText = points;
+
+    currentQuestion++;
+
+    if (currentQuestion < questions.length) {
+        setTimeout(showQuestion, 800);
+    } else {
+        setTimeout(function() {
+            document.getElementById("question").innerText =
+                "Quiz Completed!";
+            document.getElementById("result").innerText =
+                "Your score: " + points + " points";
+        }, 800);
+    }
+}
+
+</script>
+
+</body>
+  </html>
